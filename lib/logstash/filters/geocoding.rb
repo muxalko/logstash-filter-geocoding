@@ -34,8 +34,6 @@ class LogStash::Filters::Geocoding < LogStash::Filters::Base
 
     if @message
 
-      event.get()
-
       response = RestClient.post("https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyAnWuLpHCsyykK0Z6Is1sZeYHGr8HcZrMs",
           { 'cellTowers' => [
               {
