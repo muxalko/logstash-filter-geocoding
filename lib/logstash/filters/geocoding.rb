@@ -45,8 +45,19 @@ class LogStash::Filters::Geocoding < LogStash::Filters::Base
               }
           ]}.to_json, {content_type: :json, accept: :json})
 
+      locObj = JSON.parse(response.body)
       # using the event.set API
-      event.set(response.body, @message)
+      if locObj.location
+        event.set(lat,locObj.location.lat)
+        event.set(lng,locObj.location.lng)
+        event.set(accuracy,locObj.accuracy)
+      end
+
+      if locObj.error
+        event.set(error,locObj.error.message)
+      end
+
+      event.set(message, @message)
       # correct debugging log statement for reference
       # using the event.get API
       @logger.debug? && @logger.debug("Message is now: #{event.get("message")}")
