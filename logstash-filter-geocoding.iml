@@ -1,9 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="WEB_MODULE" version="4">
-  <component name="NewModuleRootManager" inherit-compiler-output="true">
-    <exclude-output />
+  <component name="ModuleRunConfigurationManager">
+    <configuration default="false" name="geocoding" type="RubyRunConfigurationType" factoryName="Ruby" temporary="true">
+      <module name="logstash-filter-geocoding" />
+      <RUBY_RUN_CONFIG NAME="RUBY_ARGS" VALUE="-e $stdout.sync=true;$stderr.sync=true;load($0=ARGV.shift)" />
+      <RUBY_RUN_CONFIG NAME="WORK DIR" VALUE="$MODULE_DIR$/lib/logstash/filters" />
+      <RUBY_RUN_CONFIG NAME="SHOULD_USE_SDK" VALUE="false" />
+      <RUBY_RUN_CONFIG NAME="ALTERN_SDK_NAME" VALUE="" />
+      <RUBY_RUN_CONFIG NAME="myPassParentEnvs" VALUE="true" />
+      <envs />
+      <EXTENSION ID="BundlerRunConfigurationExtension" bundleExecEnabled="false" />
+      <EXTENSION ID="JRubyRunConfigurationExtension" NailgunExecEnabled="false" />
+      <EXTENSION ID="RubyCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" track_test_folders="true" runner="rcov" />
+      <RUBY_RUN_CONFIG NAME="SCRIPT_PATH" VALUE="$MODULE_DIR$/lib/logstash/filters/geocoding.rb" />
+      <RUBY_RUN_CONFIG NAME="SCRIPT_ARGS" VALUE="" />
+      <method />
+    </configuration>
+  </component>
+  <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" scope="PROVIDED" name="chronic_duration (v0.10.6, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="clamp (v0.6.5, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="coderay (v1.1.1, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="concurrent-ruby (v1.0.0, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="diff-lcs (v1.2.5, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="domain_name (v0.5.20161021, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="ffi (v1.9.14, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="filesize (v0.0.4, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="fivemat (v1.3.2, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="gem_publisher (v1.5.0, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="gems (v0.8.3, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="http-cookie (v1.0.3, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="i18n (v0.6.9, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="insist (v1.0.0, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="jar-dependencies (v0.3.5, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="jrjackson (v0.4.0, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="jrmonitor (v0.4.2, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="jruby-openssl (v0.9.16, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="kramdown (v1.12.0, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="logstash-core (v5.0.0.pre.beta1, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="logstash-core-event-java (v5.0.0.pre.beta1, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="logstash-core-plugin-api (v2.1.16, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="logstash-devutils (v0.0.22, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="method_source (v0.8.2, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="mime-types (v3.1, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="mime-types-data (v3.2016.0521, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="minitar (v0.5.4, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="netrc (v0.11.0, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="numerizer (v0.1.1, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="polyglot (v0.3.5, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="pry (v0.10.4, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="puma (v2.16.0, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rack (v1.6.4, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rack-protection (v1.5.3, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rake (v11.3.0, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rest-client (v2.0.0, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rspec (v3.5.0, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rspec-core (v3.5.4, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rspec-expectations (v3.5.0, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rspec-mocks (v3.5.0, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rspec-support (v3.5.0, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rspec-wait (v0.0.9, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="ruby-maven (v3.3.12, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="ruby-maven-libs (v3.3.9, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rubyzip (v1.1.7, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="sinatra (v1.4.7, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="slop (v3.6.0, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="spoon (v0.0.6, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="stud (v0.0.22, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="thread_safe (v0.3.5, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="tilt (v2.0.5, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="treetop (v1.4.15, jruby-9.1.5.0-p0) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="unf (v0.1.4, jruby-9.1.5.0-p0) [gem]" level="application" />
   </component>
 </module>

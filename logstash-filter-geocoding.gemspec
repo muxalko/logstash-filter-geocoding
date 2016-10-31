@@ -1,11 +1,11 @@
 Gem::Specification.new do |s|
-  s.name = 'logstash-filter-example'
-  s.version         = '3.0.0'
-  s.licenses = ['Apache License (2.0)']
+  s.name = 'logstash-filter-geocoding'
+  s.version = '0.1.1'
+  s.licenses = ['Apache-2.0']
   s.summary = "This example filter replaces the contents of the message field with the specified value."
   s.description     = "This gem is a Logstash plugin required to be installed on top of the Logstash core pipeline using $LS_HOME/bin/logstash-plugin install gemname. This gem is not a stand-alone program"
-  s.authors = ["Elastic"]
-  s.email = 'info@elastic.co'
+  s.authors = ["Muxa"]
+  s.email = 'muxa.baba@gmail.com'
   s.homepage = "http://www.elastic.co/guide/en/logstash/current/index.html"
   s.require_paths = ["lib"]
 
@@ -19,5 +19,6 @@ Gem::Specification.new do |s|
 
   # Gem dependencies
   s.add_runtime_dependency "logstash-core-plugin-api", "~> 2.0"
-  s.add_development_dependency 'logstash-devutils'
+  s.add_runtime_dependency "rest-client", "= 2.0.0"
+  s.add_development_dependency 'logstash-devutils', '~> 0'
 end

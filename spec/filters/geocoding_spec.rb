@@ -1,20 +1,20 @@
 # encoding: utf-8
 require 'spec_helper'
-require "logstash/filters/example"
+require "logstash/filters/geocoding"
 
-describe LogStash::Filters::Example do
+describe LogStash::Filters::Geocoding do
   describe "Set to Hello World" do
     let(:config) do <<-CONFIG
       filter {
-        example {
-          message => "Hello World"
+        geocoding {
+          message => "test message"
         }
       }
     CONFIG
     end
 
     sample("message" => "some text") do
-      expect(subject.get("message")).to eq('Hello World')
+      expect(subject.get("message")).to eq('test message')
     end
   end
 end
