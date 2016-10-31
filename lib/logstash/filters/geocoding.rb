@@ -35,7 +35,7 @@ class LogStash::Filters::Geocoding < LogStash::Filters::Base
     if @message
       # Replace the event message with our message as configured in the
       # config file.
-      response = RestClient.post("www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyAnWuLpHCsyykK0Z6Is1sZeYHGr8HcZrMs",
+      response = RestClient.post("https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyAnWuLpHCsyykK0Z6Is1sZeYHGr8HcZrMs",
           { 'cellTowers' => [
               {
                   'cellId' => 32446,
