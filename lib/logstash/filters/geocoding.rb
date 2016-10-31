@@ -33,8 +33,9 @@ class LogStash::Filters::Geocoding < LogStash::Filters::Base
   def filter(event)
 
     if @message
-      # Replace the event message with our message as configured in the
-      # config file.
+
+      event.get()
+
       response = RestClient.post("https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyAnWuLpHCsyykK0Z6Is1sZeYHGr8HcZrMs",
           { 'cellTowers' => [
               {
@@ -45,18 +46,25 @@ class LogStash::Filters::Geocoding < LogStash::Filters::Base
               }
           ]}.to_json, {content_type: :json, accept: :json})
 
-      locObj = JSON.parse(response.body)
+      @logger.debug? && @logger.debug("Response : #{response}")
       # using the event.set API
-      if locObj.location
-        event.set(lat,locObj.location.lat)
-        event.set(lng,locObj.location.lng)
-        event.set(accuracy,locObj.accuracy)
-      end
+      parsed = JSON.parse(response.body)
+      parsed.each{|k, v| event.set(k, v)}
 
-      if locObj.error
-        event.set(error,locObj.error.message)
-      end
+      # if locObj.location
+      #   # event.set(lat,parsed.location.lat)
+      #   # event.set(lng,parsed.location.lng)
+      #   # event.set(accuracy,locObj.accuracy)
+      # end
 
+      # if locObj.error
+      #   event.set(error,locObj.error.message)
+      # end
+
+
+
+      # Replace the event message with our message as configured in the
+      # config file.
       event.set(message, @message)
       # correct debugging log statement for reference
       # using the event.get API
