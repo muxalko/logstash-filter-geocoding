@@ -72,15 +72,15 @@ class LogStash::Filters::Geocoding < LogStash::Filters::Base
     source = event.get(@source)
     return unless source
 
-    begin
-      parsedSource = LogStash::Json.load(source)
-    rescue => e
-      unless @skip_on_invalid_json
-        @tag_on_failure.each{|tag| event.tag(tag)}
-        @logger.warn("Error parsing json", :source => @source, :raw => source, :exception => e)
-      end
-      return
-    end
+    # begin
+    #   parsedSource = LogStash::Json.load(source)
+    # rescue => e
+    #   unless @skip_on_invalid_json
+    #     @tag_on_failure.each{|tag| event.tag(tag)}
+    #     @logger.warn("Error parsing json", :source => @source, :raw => source, :exception => e)
+    #   end
+    #   return
+    # end
 
     if @target
       response = RestClient.post("https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyAnWuLpHCsyykK0Z6Is1sZeYHGr8HcZrMs",
@@ -92,7 +92,7 @@ class LogStash::Filters::Geocoding < LogStash::Filters::Base
                                  #         'mobileNetworkCode' => 410
                                  #     }
                                  # ]}.to_json,
-                                 parsedSource,
+                                 source,
                                  {content_type: :json, accept: :json})
 
       @logger.debug? && @logger.debug("Response : #{response}")
