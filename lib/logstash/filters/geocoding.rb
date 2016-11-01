@@ -83,7 +83,8 @@ class LogStash::Filters::Geocoding < LogStash::Filters::Base
     # end
 
     if @target
-      response = RestClient.post("https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyAnWuLpHCsyykK0Z6Is1sZeYHGr8HcZrMs",
+      begin
+        response = RestClient.post("https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyAnWuLpHCsyykK0Z6Is1sZeYHGr8HcZrMs",
                                  # { 'cellTowers' => [
                                  #     {
                                  #         'cellId' => 32446,
@@ -95,8 +96,11 @@ class LogStash::Filters::Geocoding < LogStash::Filters::Base
                                  source.to_json,
                                  {content_type: :json, accept: :json})
 
-      @logger.debug? && @logger.debug("Response : #{response}")
-
+      rescue => e
+        @logger.warn("Error at http request", :exception => e)
+        @logger.debug? && @logger.debug("Response : #{response}")
+        return
+      end
       parsedTarget = LogStash::Json.load(response.body)
       event.set(@target,parsedTarget)
       # parsedTarget.each{|k, v| event.set(@target.k, v)}
