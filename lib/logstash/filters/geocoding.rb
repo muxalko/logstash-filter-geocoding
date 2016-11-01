@@ -20,15 +20,15 @@ class LogStash::Filters::Geocoding < LogStash::Filters::Base
   #
   config_name "geocoding"
 
-  # The configuration for the JSON filter:
+  # The configuration for the Geocoding filter:
   # [source,ruby]
   #     source => source_field
   #
-  # For example, if you have JSON data in the `message` field:
+  # For example, if you have JSON data in the `cellData` field:
   # [source,ruby]
   #     filter {
   #       json {
-  #         source => "message"
+  #         source => "cellData"
   #       }
   #     }
   #
@@ -39,11 +39,11 @@ class LogStash::Filters::Geocoding < LogStash::Filters::Base
   # Define the target field for placing the parsed data. If this setting is
   # omitted, the JSON data will be stored at the root (top level) of the event.
   #
-  # For example, if you want the data to be put in the `location` field:
+  # For example, if you want the data to be put in the `geoData` field:
   # [source,ruby]
   #     filter {
   #       geocoding {
-  #         target => "location"
+  #         target => "geoData"
   #       }
   #     }
   #
@@ -53,12 +53,40 @@ class LogStash::Filters::Geocoding < LogStash::Filters::Base
   # NOTE: if the `target` field already exists, it will be overwritten!
   config :target, :validate => :string
 
+  # Define the request method. If this setting is omitted, "get" will be used.
+  # Only "get" and "post" are implemented
+  # For example, if you want the request method to be post:
+  # [source,ruby]
+  #     filter {
+  #       geocoding {
+  #         method => "post"
+  #       }
+  #     }
+  #
+  # NOTE: if the `method` field already exists, it will be overwritten!
+  config :method, :validate => :string, :default => "get"
+
+  # The configuration for the Geocoding filter:
+  # [source,ruby]
+  #     url => api_url_string
+  #
+  # For example, if you have JSON data in the `cellData` field:
+  # [source,ruby]
+  #     filter {
+  #       json {
+  #         url => "https://www.googleapis.com/geolocation/v1/geolocate?key=1234567"
+  #       }
+  #     }
+  #
+  # The above would parse the json from the `message` field
+  config :url, :validate => :string, :required => true
+
   # Append values to the `tags` field when there has been no
   # successful match
   config :tag_on_failure, :validate => :array, :default => ["_jsonparsefailure"]
 
   # Allow to skip filter on invalid json (allows to handle json and non-json data without warnings)
-  config :skip_on_invalid_json, :validate => :boolean, :default => false
+  config :skip_on_invalid_json_response, :validate => :boolean, :default => false
 
   public
   def register
@@ -82,19 +110,24 @@ class LogStash::Filters::Geocoding < LogStash::Filters::Base
     #   return
     # end
 
-    if @target
+    if @target && @url
       begin
-        response = RestClient.post("https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyAnWuLpHCsyykK0Z6Is1sZeYHGr8HcZrMs",
-                                 # { 'cellTowers' => [
-                                 #     {
-                                 #         'cellId' => 32446,
-                                 #         'locationAreaCode' => 56964,
-                                 #         'mobileCountryCode' => 310,
-                                 #         'mobileNetworkCode' => 410
-                                 #     }
-                                 # ]}.to_json,
-                                 source.to_json,
-                                 {content_type: :json, accept: :json})
+        case @method
+          when "post"
+            response = RestClient.post(@url,
+                                       # { 'cellTowers' => [
+                                       #     {
+                                       #         'cellId' => 32446,
+                                       #         'locationAreaCode' => 56964,
+                                       #         'mobileCountryCode' => 310,
+                                       #         'mobileNetworkCode' => 410
+                                       #     }
+                                       # ]}.to_json,
+                                       source.to_json,
+                                       {content_type: :json, accept: :json})
+          else
+            response =RestClient.get(@url,{accept: :json})
+        end
 
       rescue => e
         @logger.warn("Error at http request", :exception => e)
