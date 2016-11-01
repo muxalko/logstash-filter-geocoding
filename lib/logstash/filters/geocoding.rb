@@ -114,17 +114,7 @@ class LogStash::Filters::Geocoding < LogStash::Filters::Base
       begin
         case @method
           when "post"
-            response = RestClient.post(@url,
-                                       # { 'cellTowers' => [
-                                       #     {
-                                       #         'cellId' => 32446,
-                                       #         'locationAreaCode' => 56964,
-                                       #         'mobileCountryCode' => 310,
-                                       #         'mobileNetworkCode' => 410
-                                       #     }
-                                       # ]}.to_json,
-                                       source.to_json,
-                                       {content_type: :json, accept: :json})
+            response = RestClient.post(@url,source.to_json,{content_type: :json, accept: :json})
           else
             response =RestClient.get(@url,{accept: :json})
         end
@@ -137,6 +127,11 @@ class LogStash::Filters::Geocoding < LogStash::Filters::Base
         return
       end
       parsedTarget = LogStash::Json.load(response.body)
+
+      #fix key name for geo_point (location.lng => location.lon)
+      parsedTarget["location"]["lon"] = parsedTarget["location"]["lng"]
+      parsedTarget["location"].delete("lng")
+
       event.set(@target,parsedTarget)
       # parsedTarget.each{|k, v| event.set(@target.k, v)}
 
