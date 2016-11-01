@@ -99,8 +99,7 @@ class LogStash::Filters::Geocoding < LogStash::Filters::Base
       rescue => e
         @logger.warn("Error at http request", :exception => e)
         @logger.debug? && @logger.debug("Response : #{response}")
-        event.set(@target,e.response)
-        return
+        parsedTarget = LogStash::Json.load(e.response)
       end
       parsedTarget = LogStash::Json.load(response.body)
       event.set(@target,parsedTarget)
