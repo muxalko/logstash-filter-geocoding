@@ -92,7 +92,7 @@ class LogStash::Filters::Geocoding < LogStash::Filters::Base
                                  #         'mobileNetworkCode' => 410
                                  #     }
                                  # ]}.to_json,
-                                 source,
+                                 source.to_json,
                                  {content_type: :json, accept: :json})
 
       @logger.debug? && @logger.debug("Response : #{response}")
