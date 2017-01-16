@@ -148,17 +148,9 @@ class LogStash::Filters::Geocoding < LogStash::Filters::Base
       parsedTarget = LogStash::Json.load(response.body)
       if parsedTarget["status"] == 'SUCCESS'
         if @lookfor
-          #fix key name for geo_point (location.lng => location.lon)
-          parsedTarget[@lookfor]["location"]["lon"] = parsedTarget["location"]["lng"]
-          parsedTarget[@lookfor]["location"].delete("lng")
-
           event.set(@target, JsonPath.new('$..'+@lookfor).first(parsedTarget))
         else
-          #fix key name for geo_point (location.lng => location.lon)
-          parsedTarget["location"]["lon"] = parsedTarget["location"]["lng"]
-          parsedTarget["location"].delete("lng")
-
-          event.set(@target, parsedTarget)
+          event.set(@target, JsonPath.new('$..data').first(parsedTarget))
         end
       else
         event.set(@target, parsedTarget)
