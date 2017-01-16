@@ -152,13 +152,8 @@ class LogStash::Filters::Geocoding < LogStash::Filters::Base
       end
 
       #fix key name for geo_point (location.lng => location.lon)
-      #parsedTarget["location"]["lon"] = parsedTarget["location"]["lng"]
-      #parsedTarget["location"].delete("lng")
-
-
-
-
-
+      parsedTarget["location"]["lon"] = parsedTarget["location"]["lng"]
+      parsedTarget["location"].delete("lng")
 
       # parsedTarget.each{|k, v| event.set(@target.k, v)}
 
