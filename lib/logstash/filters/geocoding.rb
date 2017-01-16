@@ -143,10 +143,12 @@ class LogStash::Filters::Geocoding < LogStash::Filters::Base
         event.set(@target,parsedTarget)
         return
       end
+
+      parsedTarget = LogStash::Json.load(response.body)
       if @lookfor
-        parsedTarget = LogStash::Json.load(JsonPath.new('$..'+@lookfor).first(response.body))
+        event.set(@target,JsonPath.new('$..'+@lookfor).first(parsedTarget))
       else
-        parsedTarget = LogStash::Json.load(response.body)
+        event.set(@target,parsedTarget)
       end
 
       #fix key name for geo_point (location.lng => location.lon)
@@ -154,9 +156,9 @@ class LogStash::Filters::Geocoding < LogStash::Filters::Base
       #parsedTarget["location"].delete("lng")
 
 
-      #event.set(@target,JsonPath.new('$..'+@lookfor).first(parsedTarget))
 
-      event.set(@target,parsedTarget)
+
+
 
       # parsedTarget.each{|k, v| event.set(@target.k, v)}
 
