@@ -107,12 +107,13 @@ class LogStash::Filters::Geocoding < LogStash::Filters::Base
   public
   def register
     # Nothing to do here
-  end # def register
+  end
+
+  # def register
 
   public
   def filter(event)
     @logger.debug? && @logger.debug("Running geolocation filter", :event => event)
-
 
 
     # begin
@@ -131,43 +132,53 @@ class LogStash::Filters::Geocoding < LogStash::Filters::Base
           when "post"
             source = event.get(@source)
             return unless source
-            response = RestClient.post(@url,source.to_json,{content_type: :json, accept: :json})
+            response = RestClient.post(@url, source.to_json, {content_type: :json, accept: :json})
           else
-            response =RestClient.get(@url,{accept: :json})
+            response =RestClient.get(@url, {accept: :json})
         end
 
       rescue => e
         @logger.debug? && @logger.debug("Error at http request", :exception => e)
         # @logger.debug? && @logger.debug("Response : #{response}")
         parsedTarget = LogStash::Json.load(e.response)
-        event.set(@target,parsedTarget)
+        event.set(@target, parsedTarget)
         return
       end
 
       parsedTarget = LogStash::Json.load(response.body)
-      if @lookfor
-        event.set(@target,JsonPath.new('$..'+@lookfor).first(parsedTarget))
+      if parsedTarget["status"] == 'SUCCESS'
+        if @lookfor
+          #fix key name for geo_point (location.lng => location.lon)
+          parsedTarget[@lookfor]["location"]["lon"] = parsedTarget["location"]["lng"]
+          parsedTarget[@lookfor]["location"].delete("lng")
+
+          event.set(@target, JsonPath.new('$..'+@lookfor).first(parsedTarget))
+        else
+          #fix key name for geo_point (location.lng => location.lon)
+          parsedTarget["location"]["lon"] = parsedTarget["location"]["lng"]
+          parsedTarget["location"].delete("lng")
+
+          event.set(@target, parsedTarget)
+        end
       else
-        event.set(@target,parsedTarget)
+        event.set(@target, parsedTarget)
       end
 
-      #fix key name for geo_point (location.lng => location.lon)
-      parsedTarget["location"]["lon"] = parsedTarget["location"]["lng"]
-      parsedTarget["location"].delete("lng")
+
 
       # parsedTarget.each{|k, v| event.set(@target.k, v)}
 
     else
       unless parsedTarget.is_a?(Hash)
-        @tag_on_failure.each{|tag| event.tag(tag)}
+        @tag_on_failure.each { |tag| event.tag(tag) }
         @logger.warn("Parsed JSON object/hash requires a target configuration option", :source => @source, :raw => source)
         return
       end
 
-    @logger.debug? && @logger.debug("Message is now: #{event.get(@target)}")
+      @logger.debug? && @logger.debug("Message is now: #{event.get(@target)}")
 
-    # filter_matched should go in the last line of our successful code
-    filter_matched(event)
+      # filter_matched should go in the last line of our successful code
+      filter_matched(event)
     end # if #target
   end # def filter
 end # class LogStash::Filters::Geocoding
