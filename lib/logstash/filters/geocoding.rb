@@ -3,6 +3,7 @@ require 'logstash/filters/base'
 require 'logstash/namespace'
 require "logstash/json"
 require 'rest-client'
+require 'jsonpath'
 
 # This example filter will replace the contents of the default
 # message field with whatever you specify in the configuration.
@@ -35,6 +36,21 @@ class LogStash::Filters::Geocoding < LogStash::Filters::Base
   # The above would parse the json from the `message` field
   config :source, :validate => :string, :required => true
 
+  # Define the field to look for response data. If this setting is
+  # omitted, the JSON at the root (top level) of the event will be considered..
+  #
+  # For example, if you want the data to look for the data in the `data` field:
+  # [source,ruby]
+  #     filter {
+  #       geocoding {
+  #         lookfor => "data"
+  #       }
+  #     }
+  #
+  # JSON in the `lookfor` field will be expanded into a
+  # data structure in the `target` field below.
+  #
+  config :lookfor, :validate => :string
 
   # Define the target field for placing the parsed data. If this setting is
   # omitted, the JSON data will be stored at the root (top level) of the event.
@@ -47,7 +63,7 @@ class LogStash::Filters::Geocoding < LogStash::Filters::Base
   #       }
   #     }
   #
-  # JSON in the value of the `source` field will be expanded into a
+  # JSON of the `lookfor` field will be expanded into a
   # data structure in the `target` field.
   #
   # NOTE: if the `target` field already exists, it will be overwritten!
@@ -85,8 +101,8 @@ class LogStash::Filters::Geocoding < LogStash::Filters::Base
   # successful match
   config :tag_on_failure, :validate => :array, :default => ["_jsonparsefailure"]
 
-  # Allow to skip filter on invalid json (allows to handle json and non-json data without warnings)
-  config :skip_on_invalid_json_response, :validate => :boolean, :default => false
+  # Allow to skip filter on invalid response (allows to handle data without warnings)
+  config :skip_on_invalid_response, :validate => :boolean, :default => false
 
   public
   def register
@@ -97,13 +113,12 @@ class LogStash::Filters::Geocoding < LogStash::Filters::Base
   def filter(event)
     @logger.debug? && @logger.debug("Running geolocation filter", :event => event)
 
-    source = event.get(@source)
-    return unless source
+
 
     # begin
     #   parsedSource = LogStash::Json.load(source)
     # rescue => e
-    #   unless @skip_on_invalid_json
+    #   unless @skip_on_invalid_response
     #     @tag_on_failure.each{|tag| event.tag(tag)}
     #     @logger.warn("Error parsing json", :source => @source, :raw => source, :exception => e)
     #   end
@@ -114,25 +129,33 @@ class LogStash::Filters::Geocoding < LogStash::Filters::Base
       begin
         case @method
           when "post"
+            source = event.get(@source)
+            return unless source
             response = RestClient.post(@url,source.to_json,{content_type: :json, accept: :json})
           else
             response =RestClient.get(@url,{accept: :json})
         end
 
       rescue => e
-        @logger.warn("Error at http request", :exception => e)
-        @logger.debug? && @logger.debug("Response : #{response}")
+        @logger.debug? && @logger.debug("Error at http request", :exception => e)
+        # @logger.debug? && @logger.debug("Response : #{response}")
         parsedTarget = LogStash::Json.load(e.response)
         event.set(@target,parsedTarget)
         return
       end
+
       parsedTarget = LogStash::Json.load(response.body)
-
       #fix key name for geo_point (location.lng => location.lon)
-      parsedTarget["location"]["lon"] = parsedTarget["location"]["lng"]
-      parsedTarget["location"].delete("lng")
+      #parsedTarget["location"]["lon"] = parsedTarget["location"]["lng"]
+      #parsedTarget["location"].delete("lng")
+      if @lookfor
+        begin
+          event.set(@target,JsonPath.new('$..'+@lookfor).first(parsedTarget))
+        else
+          event.set(@target,parsedTarget)
+        end
+      end
 
-      event.set(@target,parsedTarget)
       # parsedTarget.each{|k, v| event.set(@target.k, v)}
 
     else

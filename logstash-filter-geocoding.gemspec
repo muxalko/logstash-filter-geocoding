@@ -20,5 +20,6 @@ Gem::Specification.new do |s|
   # Gem dependencies
   s.add_runtime_dependency "logstash-core-plugin-api", "~> 2.0"
   s.add_runtime_dependency "rest-client", "= 1.8.0"
+  s.add_runtime_dependency "jsonpath", "= 0.5.8"
   s.add_development_dependency 'logstash-devutils', '~> 0'
 end
