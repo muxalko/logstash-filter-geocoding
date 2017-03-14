@@ -121,13 +121,13 @@ class LogStash::Filters::Geocoding < LogStash::Filters::Base
           when "post"
             source = event.get(@source)
             return unless source
-            url = Addressable::URI.parse(@url).normalize.to_s
-            response = RestClient.post(url, source.to_json, {content_type: :json, accept: :json})
+            _url = Addressable::URI.parse(@url).normalize.to_s
+            response = RestClient.post(_url, source.to_json, {content_type: :json, accept: :json})
           else
             source = event.get(@source)
             return unless source
-            url = Addressable::URI.parse(@url+@source).normalize.to_s
-            response =RestClient.get(url, {accept: :json})
+            _url = Addressable::URI.parse(@url+@source).normalize.to_s
+            response =RestClient.get(_url, {accept: :json})
         end
 
       rescue => e
@@ -154,7 +154,7 @@ class LogStash::Filters::Geocoding < LogStash::Filters::Base
         return
       end
 
-      @logger.debug? && @logger.debug("Message is now: #{event.get(@target)}")
+      @logger.debug? && @logger.debug("Message is now:", :event => event )
 
       # filter_matched should go in the last line of our successful code
       filter_matched(event)
