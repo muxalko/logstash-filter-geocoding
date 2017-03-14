@@ -127,7 +127,7 @@ class LogStash::Filters::Geocoding < LogStash::Filters::Base
           else
             source = event.get(@source)
             return unless source
-            _url = Addressable::URI.parse(@url+@source).normalize.to_s
+            _url = Addressable::URI.parse(@url+source).normalize.to_s
             @logger.debug? && @logger.debug("HTTP Request ", :url => _url)
             response =RestClient.get(_url, {accept: :json})
         end
