@@ -113,7 +113,7 @@ class LogStash::Filters::Geocoding < LogStash::Filters::Base
 
   public
   def filter(event)
-    @logger.debug? && @logger.debug("Running geolocation filter", :event => event)
+    @logger.debug? && @logger.debug("Running geolocation filter", :event => event.get(@source))
 
     if @target && @url
       begin
@@ -122,11 +122,13 @@ class LogStash::Filters::Geocoding < LogStash::Filters::Base
             source = event.get(@source)
             return unless source
             _url = Addressable::URI.parse(@url).normalize.to_s
+            @logger.debug? && @logger.debug("HTTP Request ", :url => _url, :json => source)
             response = RestClient.post(_url, source.to_json, {content_type: :json, accept: :json})
           else
             source = event.get(@source)
             return unless source
             _url = Addressable::URI.parse(@url+@source).normalize.to_s
+            @logger.debug? && @logger.debug("HTTP Request ", :url => _url)
             response =RestClient.get(_url, {accept: :json})
         end
 
@@ -137,6 +139,7 @@ class LogStash::Filters::Geocoding < LogStash::Filters::Base
         return
       end
 
+      @logger.debug? && @logger.debug("HTTP response", :response => response)
       parsedTarget = LogStash::Json.load(response.body)
       if parsedTarget["status"] == 'SUCCESS'
         if @lookfor
@@ -154,7 +157,7 @@ class LogStash::Filters::Geocoding < LogStash::Filters::Base
         return
       end
 
-      @logger.debug? && @logger.debug("Message is now:", :event => event )
+      @logger.debug? && @logger.debug("Message is now:", :event => event.get(@target) )
 
       # filter_matched should go in the last line of our successful code
       filter_matched(event)
